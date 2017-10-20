@@ -18,5 +18,6 @@ repositories {
 }
 
 dependencies {
+    compile files('lib/jacobi.jar')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
