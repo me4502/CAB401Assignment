@@ -1,6 +1,6 @@
 /*
  * $Id: Directions.java,v 1.10 2004/11/30 05:10:29 ahmed Exp $
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -20,25 +20,26 @@ package jaligner;
 
 /**
  * Traceback directions.
- * 
+ *
  * @author Ahmed Moustafa (ahmed@users.sf.net)
  */
 
 public abstract class Directions {
-	/**
-	 * Traceback direction stop
-	 */
-	public static final byte STOP = 0;
-	/**
-	 * Traceback direction left
-	 */
-	public static final byte LEFT = 1;
+
     /**
-	 * Traceback direction diagonal
-	 */
-	public static final byte DIAGONAL = 2;
-	/**
-	 * Traceback direction up
-	 */
-	public static final byte UP = 3;
+     * Traceback direction stop
+     */
+    public static final byte STOP = 0;
+    /**
+     * Traceback direction left
+     */
+    public static final byte LEFT = 1;
+    /**
+     * Traceback direction diagonal
+     */
+    public static final byte DIAGONAL = 2;
+    /**
+     * Traceback direction up
+     */
+    public static final byte UP = 3;
 }

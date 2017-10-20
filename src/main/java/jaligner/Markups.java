@@ -1,6 +1,6 @@
 /*
  * $Id: Markups.java,v 1.2 2004/11/30 05:10:29 ahmed Exp $
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -20,28 +20,29 @@ package jaligner;
 
 /**
  * Markups line characters.
- * 
+ *
  * @author Ahmed Moustafa (ahmed@users.sf.net)
  */
 
 public abstract class Markups {
-	/**
-	 * Markup line identity character
-	 */
-	public static final char IDENTITY	= '|';
-	
-	/**
-	 * Markup line similarity character
-	 */
-	public static final char SIMILARITY	= ':';
-	
-	/**
-	 * Markup line gap character
-	 */
-	public static final char GAP		= ' ';
-	
-	/**
-	 * Markup line mismatch character
-	 */
-	public static final char MISMATCH	= '.';
+
+    /**
+     * Markup line identity character
+     */
+    public static final char IDENTITY = '|';
+
+    /**
+     * Markup line similarity character
+     */
+    public static final char SIMILARITY = ':';
+
+    /**
+     * Markup line gap character
+     */
+    public static final char GAP = ' ';
+
+    /**
+     * Markup line mismatch character
+     */
+    public static final char MISMATCH = '.';
 }

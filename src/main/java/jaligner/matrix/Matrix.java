@@ -1,6 +1,6 @@
 /*
  * $Id: Matrix.java,v 1.2 2005/04/14 14:44:42 ahmed Exp $
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -22,13 +22,14 @@ import java.io.Serializable;
 
 /**
  * Scoring matrix.
- * 
+ *
  * @author Ahmed Moustafa (ahmed@users.sf.net)
  */
 
 public class Matrix implements Serializable {
+
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 3833742170619524400L;
 
@@ -36,33 +37,33 @@ public class Matrix implements Serializable {
      * Matrix id (or name)
      */
     private String id = null;
-    
+
     /**
      * Scores
      */
     private float[][] scores = null;
-    
+
     public Matrix(String id, float[][] scores) {
         this.id = id;
         this.scores = scores;
     }
-    
+
     /**
      * @return Returns the id.
      */
     public String getId() {
         return this.id;
     }
-    
+
     /**
      * @return Returns the scores.
      */
     public float[][] getScores() {
         return this.scores;
     }
-    
+
     /**
-     * 
+     *
      * @param a
      * @param b
      * @return score

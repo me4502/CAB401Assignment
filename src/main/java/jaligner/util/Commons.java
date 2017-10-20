@@ -1,6 +1,6 @@
 /*
  * $Id: Commons.java,v 1.27 2005/04/18 05:37:52 ahmed Exp $
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -28,190 +28,194 @@ import java.util.logging.Logger;
 
 /**
  * Global constants/varilables/settings
- * 
+ *
  * @author Ahmed Moustafa (ahmed@users.sf.net)
  */
 
 public abstract class Commons {
-	/**
-	 * Logger
-	 */
-	private static final Logger logger = Logger.getLogger(Commons.class
-			.getName());
 
-	/**
-	 * Build timestamp attribute in the manifest in the jar
-	 */
-	private static final String BUILD_TIMESTAMP = "Created-At";
+    /**
+     * Logger
+     */
+    private static final Logger logger = Logger.getLogger(Commons.class
+            .getName());
 
-	/**
-	 *  
-	 */
-	private static final String currentRelease = getManifestBuildTimestamp();
+    /**
+     * Build timestamp attribute in the manifest in the jar
+     */
+    private static final String BUILD_TIMESTAMP = "Created-At";
 
-	/**
-	 * Default home directory
-	 */
-	private static final String DEFAULT_USER_DIRECTORY = ".";
+    /**
+     *
+     */
+    private static final String currentRelease = getManifestBuildTimestamp();
 
-	/**
-	 * Default file separator
-	 */
-	private static final String DEFAULT_FILE_SEPARATOR = "/";
+    /**
+     * Default home directory
+     */
+    private static final String DEFAULT_USER_DIRECTORY = ".";
 
-	/**
-	 * Default line separator
-	 */
-	private static final String DEFAULT_LINE_SEPARATOR = "\r\n";
+    /**
+     * Default file separator
+     */
+    private static final String DEFAULT_FILE_SEPARATOR = "/";
 
-	/**
-	 * User home directory
-	 */
-	private static String userDirectory = DEFAULT_USER_DIRECTORY;
-	static {
-		try {
-			userDirectory = System.getProperty("user.dir");
-		} catch (Exception e) {
-			logger.log(Level.WARNING, "Failed getting user current directory: "
-					+ e.getMessage(), e);
-		}
-	}
+    /**
+     * Default line separator
+     */
+    private static final String DEFAULT_LINE_SEPARATOR = "\r\n";
 
-	/**
-	 * Line separator
-	 */
-	private static String fileSeparator = DEFAULT_FILE_SEPARATOR;
-	static {
-		try {
-			fileSeparator = System.getProperty("file.separator");
-		} catch (Exception e) {
-			logger.log(Level.WARNING, "Failed getting system file separator: "
-					+ e.getMessage(), e);
-		}
-	}
+    /**
+     * User home directory
+     */
+    private static String userDirectory = DEFAULT_USER_DIRECTORY;
 
-	/**
-	 * Line separator
-	 */
-	private static String lineSeparator = DEFAULT_LINE_SEPARATOR;
+    static {
+        try {
+            userDirectory = System.getProperty("user.dir");
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Failed getting user current directory: "
+                    + e.getMessage(), e);
+        }
+    }
 
-	static {
-		try {
-			lineSeparator = System.getProperty("line.separator");
-		} catch (Exception e) {
-			logger.log(Level.WARNING, "Failed getting system line separator: "
-					+ e.getMessage(), e);
-		}
-	}
+    /**
+     * Line separator
+     */
+    private static String fileSeparator = DEFAULT_FILE_SEPARATOR;
 
-	/**
-	 * JNLP enabled
-	 */
-	private static boolean jnlp = false;
-	static {
-		try {
-			jnlp = "true".equalsIgnoreCase(System.getProperty("jnlp.enabled"));
-		} catch (Exception e) {
-			logger.log(Level.WARNING, "Failed getting jnlp enabled property: "
-					+ e.getMessage(), e);
-		}
-		setJnlp(jnlp);
-	}
+    static {
+        try {
+            fileSeparator = System.getProperty("file.separator");
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Failed getting system file separator: "
+                    + e.getMessage(), e);
+        }
+    }
 
-	/**
-	 * Returns system file separator.
-	 * 
-	 * @return file separator
-	 */
-	public static String getFileSeparator() {
-		return fileSeparator;
-	}
+    /**
+     * Line separator
+     */
+    private static String lineSeparator = DEFAULT_LINE_SEPARATOR;
 
-	/**
-	 * Returns system line separator.
-	 * 
-	 * @return line separator
-	 */
-	public static String getLineSeparator() {
-		return lineSeparator;
-	}
+    static {
+        try {
+            lineSeparator = System.getProperty("line.separator");
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Failed getting system line separator: "
+                    + e.getMessage(), e);
+        }
+    }
 
-	/**
-	 * Returns user's current directory.
-	 * 
-	 * @return user's current directory
-	 */
-	public static String getUserDirectory() {
-		return userDirectory;
-	}
+    /**
+     * JNLP enabled
+     */
+    private static boolean jnlp = false;
 
-	/**
-	 * Sets the JNLP flag to true of false
-	 * 
-	 * @param jnlp
-	 *            true or false
-	 */
-	public static void setJnlp(boolean jnlp) {
-		Commons.jnlp = jnlp;
-	}
+    static {
+        try {
+            jnlp = "true".equalsIgnoreCase(System.getProperty("jnlp.enabled"));
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Failed getting jnlp enabled property: "
+                    + e.getMessage(), e);
+        }
+        setJnlp(jnlp);
+    }
 
-	/**
-	 * Returns true if jnlp is enabled
-	 * 
-	 * @return true if jnlp is enabled, otherwise returns false
-	 */
-	public static boolean isJnlp() {
-		return jnlp;
-	}
+    /**
+     * Returns system file separator.
+     *
+     * @return file separator
+     */
+    public static String getFileSeparator() {
+        return fileSeparator;
+    }
 
-	/**
-	 * Gets the build teimstamp from the jar manifest
-	 * 
-	 * @return build timestamp
-	 */
-	private static String getManifestBuildTimestamp() {
-		JarURLConnection connection = null;
-		JarFile jarFile = null;
-		URL url = Commons.class.getClassLoader().getResource("jaligner");
-		try {
-			// Get jar connection
-			connection = (JarURLConnection) url.openConnection();
+    /**
+     * Returns system line separator.
+     *
+     * @return line separator
+     */
+    public static String getLineSeparator() {
+        return lineSeparator;
+    }
 
-			// Get the jar file
-			jarFile = connection.getJarFile();
+    /**
+     * Returns user's current directory.
+     *
+     * @return user's current directory
+     */
+    public static String getUserDirectory() {
+        return userDirectory;
+    }
 
-			// Get the manifest
-			Manifest manifest = jarFile.getManifest();
+    /**
+     * Sets the JNLP flag to true of false
+     *
+     * @param jnlp
+     *            true or false
+     */
+    public static void setJnlp(boolean jnlp) {
+        Commons.jnlp = jnlp;
+    }
 
-			// Get the manifest entries
-			Attributes attributes = manifest.getMainAttributes();
+    /**
+     * Returns true if jnlp is enabled
+     *
+     * @return true if jnlp is enabled, otherwise returns false
+     */
+    public static boolean isJnlp() {
+        return jnlp;
+    }
 
-			Attributes.Name name = new Attributes.Name(BUILD_TIMESTAMP);
-			return attributes.getValue(name);
-		} catch (Exception e) {
-			String message = "Failed getting the current release info: "
-					+ e.getMessage();
-			logger.log(Level.WARNING, message);
-		}
-		return null;
-	}
+    /**
+     * Gets the build teimstamp from the jar manifest
+     *
+     * @return build timestamp
+     */
+    private static String getManifestBuildTimestamp() {
+        JarURLConnection connection = null;
+        JarFile jarFile = null;
+        URL url = Commons.class.getClassLoader().getResource("jaligner");
+        try {
+            // Get jar connection
+            connection = (JarURLConnection) url.openConnection();
 
-	/**
-	 * Returns the current release version of JAligner
-	 * 
-	 * @return current release
-	 */
-	public static String getCurrentRelease() {
-		return currentRelease;
-	}
+            // Get the jar file
+            jarFile = connection.getJarFile();
 
-	/**
-	 * Returns information about JAligner
-	 * 
-	 * @return information about JAligner
-	 */
-	public static String getJAlignerInfo() {
-		return "JAligner - Build: " + getCurrentRelease()
-				+ " - By: Ahmed Moustafa (ahmed@users.sf.net)";
-	}
+            // Get the manifest
+            Manifest manifest = jarFile.getManifest();
+
+            // Get the manifest entries
+            Attributes attributes = manifest.getMainAttributes();
+
+            Attributes.Name name = new Attributes.Name(BUILD_TIMESTAMP);
+            return attributes.getValue(name);
+        } catch (Exception e) {
+            String message = "Failed getting the current release info: "
+                    + e.getMessage();
+            logger.log(Level.WARNING, message);
+        }
+        return null;
+    }
+
+    /**
+     * Returns the current release version of JAligner
+     *
+     * @return current release
+     */
+    public static String getCurrentRelease() {
+        return currentRelease;
+    }
+
+    /**
+     * Returns information about JAligner
+     *
+     * @return information about JAligner
+     */
+    public static String getJAlignerInfo() {
+        return "JAligner - Build: " + getCurrentRelease()
+                + " - By: Ahmed Moustafa (ahmed@users.sf.net)";
+    }
 }
