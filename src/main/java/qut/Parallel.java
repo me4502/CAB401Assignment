@@ -23,7 +23,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Parallel {
     private static ConcurrentHashMap<String, Sigma70Consensus> consensus = new ConcurrentHashMap<>();
-    private static Series sigma70_pattern = Sigma70Definition.getSeriesAll_Unanchored(0.7);
+    // Sigma70 pattern is stateful, keep it in a ThreadLocal.
+    private static ThreadLocal<Series> sigma70_pattern = ThreadLocal.withInitial(() -> Sigma70Definition.getSeriesAll_Unanchored(0.7));
     private static final Matrix BLOSUM_62 = BLOSUM62.Load();
     private static byte[] complement = new byte['z'];
 
@@ -79,7 +80,7 @@ public class Parallel {
     }
 
     private static Match PredictPromoter(NucleotideSequence upStreamRegion) {
-        return BioPatterns.getBestMatch(sigma70_pattern, upStreamRegion.toString());
+        return BioPatterns.getBestMatch(sigma70_pattern.get(), upStreamRegion.toString());
     }
 
     private static void ProcessDir(List<String> list, File dir) {
@@ -174,13 +175,13 @@ public class Parallel {
         public Void call() throws Exception {
             if (Homologous(gene.sequence, referenceGene.sequence)) {
                 NucleotideSequence upStreamRegion = GetUpstreamRegion(record.nucleotides, gene);
-                lock.lock();
                 Match prediction = PredictPromoter(upStreamRegion);
                 if (prediction != null) {
+                    lock.lock();
                     consensus.get(referenceGene.name).addMatch(prediction);
                     consensus.get("all").addMatch(prediction);
+                    lock.unlock();
                 }
-                lock.unlock();
             }
 
             return null;
