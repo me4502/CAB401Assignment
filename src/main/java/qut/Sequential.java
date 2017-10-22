@@ -16,13 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Sequential {
-
-    private static HashMap<String, Sigma70Consensus> consensus = new HashMap<>();
+    public static HashMap<String, Sigma70Consensus> consensus = new HashMap<>();
     private static Series sigma70_pattern = Sigma70Definition.getSeriesAll_Unanchored(0.7);
     private static final Matrix BLOSUM_62 = BLOSUM62.Load();
     private static byte[] complement = new byte['z'];

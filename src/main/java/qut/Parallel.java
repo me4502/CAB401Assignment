@@ -13,16 +13,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Parallel {
-    private static ConcurrentHashMap<String, Sigma70Consensus> consensus = new ConcurrentHashMap<>();
+    public static HashMap<String, Sigma70Consensus> consensus = new HashMap<>();
     // Sigma70 pattern is stateful, keep it in a ThreadLocal.
     private static ThreadLocal<Series> sigma70_pattern = ThreadLocal.withInitial(() -> Sigma70Definition.getSeriesAll_Unanchored(0.7));
     private static final Matrix BLOSUM_62 = BLOSUM62.Load();
