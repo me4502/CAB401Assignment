@@ -13,16 +13,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class Sequential {
-
-    private static HashMap<String, Sigma70Consensus> consensus = new HashMap<>();
+public class Parallel {
+    private static ConcurrentHashMap<String, Sigma70Consensus> consensus = new ConcurrentHashMap<>();
     private static Series sigma70_pattern = Sigma70Definition.getSeriesAll_Unanchored(0.7);
     private static final Matrix BLOSUM_62 = BLOSUM62.Load();
     private static byte[] complement = new byte['z'];
@@ -108,29 +108,42 @@ public class Sequential {
         return record;
     }
 
+    private static int getThreadCount() {
+        return Runtime.getRuntime().availableProcessors();
+    }
+
+    // Create a fixed thread pool with the number of threads the CPU is capable of.
+    private static ExecutorService executorService = Executors.newFixedThreadPool(getThreadCount());
+
     public static void run(String referenceFile, String dir) throws IOException {
+        System.out.println("Using a thread pool with " + getThreadCount() + " worker threads!");
+        List<Callable<Void>> callableList = new ArrayList<>();
+
         List<Gene> referenceGenes = ParseReferenceGenes(referenceFile);
         for (String filename : ListGenbankFiles(dir)) {
-            System.out.println(filename);
+            System.out.println("Scanning genbank file: " + filename);
             GenbankRecord record = Parse(filename);
             for (Gene referenceGene : referenceGenes) {
-                System.out.println(referenceGene.name);
+                System.out.println("Queuing up tasks for reference gene: " + referenceGene.name);
                 for (Gene gene : record.genes) {
-                    if (Homologous(gene.sequence, referenceGene.sequence)) {
-                        NucleotideSequence upStreamRegion = GetUpstreamRegion(record.nucleotides, gene);
-                        Match prediction = PredictPromoter(upStreamRegion);
-                        if (prediction != null) {
-                            consensus.get(referenceGene.name).addMatch(prediction);
-                            consensus.get("all").addMatch(prediction);
-                        }
-                    }
+                    callableList.add(new GeneCallable(gene, referenceGene, record));
                 }
             }
+        }
+
+        System.out.println("Running scheduled gene matches.");
+
+        try {
+            executorService.invokeAll(callableList);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         for (Map.Entry<String, Sigma70Consensus> entry : consensus.entrySet()) {
             System.out.println(entry.getKey() + " " + entry.getValue());
         }
+
+        executorService.shutdown();
     }
 
     public static void main(String[] args) throws IOException {
@@ -140,5 +153,37 @@ public class Sequential {
         run("../referenceGenes.list", "../Ecoli");
         long diff = System.nanoTime() - time;
         System.out.println("Took " + (diff / 1000000000f) + " seconds to complete.");
+    }
+
+    //
+    private static final ReentrantLock lock = new ReentrantLock();
+
+    private static class GeneCallable implements Callable<Void> {
+
+        private Gene gene;
+        private Gene referenceGene;
+        private GenbankRecord record;
+
+        public GeneCallable(Gene gene, Gene referenceGene, GenbankRecord record) {
+            this.gene = gene;
+            this.referenceGene = referenceGene;
+            this.record = record;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            if (Homologous(gene.sequence, referenceGene.sequence)) {
+                NucleotideSequence upStreamRegion = GetUpstreamRegion(record.nucleotides, gene);
+                lock.lock();
+                Match prediction = PredictPromoter(upStreamRegion);
+                if (prediction != null) {
+                    consensus.get(referenceGene.name).addMatch(prediction);
+                    consensus.get("all").addMatch(prediction);
+                }
+                lock.unlock();
+            }
+
+            return null;
+        }
     }
 }
