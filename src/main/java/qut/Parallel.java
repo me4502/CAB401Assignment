@@ -109,7 +109,7 @@ public class Parallel {
         return record;
     }
 
-    private static int getThreadCount() {
+    public static int getThreadCount() {
         return Runtime.getRuntime().availableProcessors();
     }
 

@@ -22,7 +22,7 @@ public class Tester {
         long sequentialDiff = System.nanoTime() - time;
         System.out.println("Sequential run took " + (sequentialDiff / 1000000000f) + " seconds to complete.");
 
-        System.out.println("Sequential took " + (sequentialDiff / (float) parallelDiff) * 100.0 + "% longer to finish!");
+        System.out.println("Speedup is " + (sequentialDiff / (double) parallelDiff) + " with " + Parallel.getThreadCount() + " threads.");
 
         boolean same = true;
 
