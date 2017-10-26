@@ -24,7 +24,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Parallel {
     public static HashMap<String, Sigma70Consensus> consensus = new HashMap<>();
     // Sigma70 pattern is stateful, keep it in a ThreadLocal.
-    private static ThreadLocal<Series> sigma70_pattern = ThreadLocal.withInitial(() -> Sigma70Definition.getSeriesAll_Unanchored(0.7));
+    private static ThreadLocal<Series> sigma70_pattern = ThreadLocal.withInitial(
+            () -> Sigma70Definition.getSeriesAll_Unanchored(0.7));
     private static final Matrix BLOSUM_62 = BLOSUM62.Load();
     private static byte[] complement = new byte['z'];
 
