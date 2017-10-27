@@ -130,8 +130,6 @@ public class Sequential {
     }
 
     public static void main(String[] args) throws IOException {
-        System.in.read(); // Wait for some input before continuing. The profiler I'm using automatically uses sampling, so I have to disable it and
-        // re-enable it. Waiting means I catch everything that's useful in the profiling.
         long time = System.nanoTime();
         run("../referenceGenes.list", "../Ecoli");
         long diff = System.nanoTime() - time;

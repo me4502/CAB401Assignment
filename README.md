@@ -19,3 +19,15 @@ Once this is done, run,
 `java -cp "jacobi.jar:CAB401Assignment-1.0-SNAPSHOT.jar" qut.Tester`
 
 in a terminal.
+
+## Running only the Parallel Application
+
+To run only the parallel application, use the following command instead,
+
+`java -cp "jacobi.jar:CAB401Assignment-1.0-SNAPSHOT.jar" qut.Parallel`
+
+## Running only the Sequential Application
+
+To run only the sequential application, use the following command instead,
+
+`java -cp "jacobi.jar:CAB401Assignment-1.0-SNAPSHOT.jar" qut.Sequential`
